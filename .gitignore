@@ -44,6 +44,9 @@ pnpm-lock.yaml
 .env*
 !.env.example
 
+# npm auth (use GitHub secrets)
+.npmrc
+
 # vercel
 .vercel
 
