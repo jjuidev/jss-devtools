@@ -1,5 +1,6 @@
 import figlet from 'figlet';
-import { CLI_META, colors } from './constants';
+import { CLI_META } from './constants';
+import { logger } from './logger';
 
 let cachedBanner: string | null = null;
 let bannerDisplayed = false;
@@ -25,7 +26,6 @@ export const displayBanner = (): void => {
 	bannerDisplayed = true;
 
 	const banner = getBanner();
-	console.log(colors.primary(banner));
-	console.log(colors.muted(CLI_META.tagline));
-	console.log();
+	logger.primary(banner);
+	logger.muted(CLI_META.tagline);
 };

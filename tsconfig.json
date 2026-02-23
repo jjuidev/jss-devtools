@@ -1,7 +1,9 @@
 {
 	"compilerOptions": {
 		"target": "ES2022",
-		"lib": ["ES2022"],
+		"lib": [
+			"ES2022"
+		],
 		"module": "ESNext",
 		"moduleResolution": "bundler",
 		"resolveJsonModule": true,
@@ -10,8 +12,20 @@
 		"strict": true,
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
-		"rootDir": "./src"
+		"rootDir": "./src",
+		"baseUrl": "src",
+		"paths": {
+			"@/*": [
+				"./*"
+			]
+		}
 	},
-	"include": ["src/**/*"],
-	"exclude": ["node_modules", "dist", "scripts"]
+	"include": [
+		"src/**/*"
+	],
+	"exclude": [
+		"node_modules",
+		"dist",
+		"scripts"
+	]
 }
