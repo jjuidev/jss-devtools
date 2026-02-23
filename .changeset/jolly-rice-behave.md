@@ -2,4 +2,4 @@
 '@jjuidev/jss-devtools': patch
 ---
 
-Add jss CLI
+Add jss init command
