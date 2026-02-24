@@ -1,15 +1,15 @@
-import { confirm, group, select } from '@clack/prompts';
-import { defineCommand } from 'citty';
+import { confirm, group, select } from '@clack/prompts'
+import { defineCommand } from 'citty'
+import { detectPackageManager } from 'nypm'
 
-import { detectPackageManager } from 'nypm';
-import { displayBanner } from '../../utils/banner';
-import { logger } from '../../utils/logger';
-import { Framework, SetupAnswers } from './types/setup-pkgs';
-import { setupCommitlint } from './utils/setup-commitlint';
-import { setupHusky } from './utils/setup-husky';
-import { setupPackages } from './utils/setup-pkgs';
-import { setupAliasImport } from './utils/setup-alias-import';
-import { setupFormatter } from './utils/setup-formatter';
+import { Framework, SetupAnswers } from '@/cli/commands/init/types/setup-pkgs'
+import { setupAliasImport } from '@/cli/commands/init/utils/setup-alias-import'
+import { setupCommitlint } from '@/cli/commands/init/utils/setup-commitlint'
+import { setupFormatter } from '@/cli/commands/init/utils/setup-formatter'
+import { setupHusky } from '@/cli/commands/init/utils/setup-husky'
+import { setupPackages } from '@/cli/commands/init/utils/setup-pkgs'
+import { displayBanner } from '@/cli/utils/banner'
+import { logger } from '@/cli/utils/logger'
 
 export const initCommand = defineCommand({
 	meta: {
@@ -23,12 +23,13 @@ export const initCommand = defineCommand({
 	// 		default: 'node'
 	// 	}
 	// },
-	async run({ args }) {
-		displayBanner();
+	run: async ({ args }) => {
+		displayBanner()
 
-		const pm = await detectPackageManager(process.cwd());
+		const pm = await detectPackageManager(process.cwd())
+
 		if (!pm) {
-			throw new Error('No package manager detected.');
+			throw new Error('No package manager detected.')
 		}
 
 		const rawAnswers = await group(
@@ -38,10 +39,22 @@ export const initCommand = defineCommand({
 						message: 'Which framework do you want to use?',
 						initialValue: 'node',
 						options: [
-							{ value: 'node', label: 'Node.js' },
-							{ value: 'react', label: 'React' },
-							{ value: 'react-native', label: 'React Native' },
-							{ value: 'nextjs', label: 'Next.js' }
+							{
+								value: 'node',
+								label: 'Node.js'
+							},
+							{
+								value: 'react',
+								label: 'React'
+							},
+							{
+								value: 'react-native',
+								label: 'React Native'
+							},
+							{
+								value: 'nextjs',
+								label: 'Next.js'
+							}
 						]
 					}),
 
@@ -49,7 +62,7 @@ export const initCommand = defineCommand({
 					if (results.framework && ['react', 'react-native', 'nextjs'].includes(results.framework)) {
 						return confirm({
 							message: 'Do you want to use Tailwind CSS?'
-						});
+						})
 					}
 				},
 
@@ -58,7 +71,7 @@ export const initCommand = defineCommand({
 						return confirm({
 							initialValue: false,
 							message: 'Do you want to use Storybook?'
-						});
+						})
 					}
 				},
 
@@ -69,28 +82,43 @@ export const initCommand = defineCommand({
 			},
 			{
 				onCancel: () => {
-					logger.warn('Setup cancelled!');
-					process.exit(1);
+					logger.warn('Setup cancelled!')
+					process.exit(1)
 				}
 			}
-		);
+		)
 
 		const answers: SetupAnswers = {
 			framework: rawAnswers.framework as Framework,
 			useTailwind: rawAnswers.useTailwind === true,
 			useStorybook: rawAnswers.useStorybook === true,
 			useAliasImport: rawAnswers.useAliasImport === true
-		};
+		}
 
-    await setupPackages({pm, answers});
+		await setupPackages({
+			pm,
+			answers
+		})
 
-    await Promise.all([
-      setupHusky({pm, answers}),
-      setupCommitlint({pm, answers}),
-      setupFormatter({pm, answers}),
-      setupAliasImport({pm, answers})
-    ])
+		await Promise.all([
+			setupHusky({
+				pm,
+				answers
+			}),
+			setupCommitlint({
+				pm,
+				answers
+			}),
+			setupFormatter({
+				pm,
+				answers
+			}),
+			setupAliasImport({
+				pm,
+				answers
+			})
+		])
 
-    logger.success('Setup completed!');
+		logger.success('Setup completed!')
 	}
-});
+})

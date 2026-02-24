@@ -1,5 +1,5 @@
-import consola from 'consola';
-import { colors } from 'consola/utils';
+import consola from 'consola'
+import { colors } from 'consola/utils'
 
 export const logger = {
 	error: (message: string) => consola.error(message),
@@ -15,5 +15,5 @@ export const logger = {
 
 	box: (message: string) => consola.box(message),
 	start: (message: string) => consola.start(message),
-	ready: (message: string) => consola.ready(message),
-};
+	ready: (message: string) => consola.ready(message)
+}

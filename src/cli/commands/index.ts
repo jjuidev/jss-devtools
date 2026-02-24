@@ -1,2 +1,2 @@
-export { initCommand } from './init';
-export { lsCommand } from './ls';
+export * from '@/cli/commands/init'
+export * from '@/cli/commands/ls'

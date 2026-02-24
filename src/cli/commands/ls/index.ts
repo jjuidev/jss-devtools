@@ -1,21 +1,21 @@
-import { defineCommand } from 'citty';
+import { defineCommand } from 'citty'
 
-import { displayBanner } from '../../utils/banner';
-import { logger } from '../../utils/logger';
+import { displayBanner } from '@/cli/utils/banner'
+import { logger } from '@/cli/utils/logger'
 
 export const lsCommand = defineCommand({
 	meta: {
 		name: 'ls',
 		description: 'List all available commands'
 	},
-	async run() {
-		displayBanner();
-		logger.text('Available commands:\n');
+	run: async () => {
+		displayBanner()
+		logger.text('Available commands:\n')
 
-		logger.primary('ls');
-		logger.muted('\t- List all available commands');
+		logger.primary('ls')
+		logger.muted('\t- List all available commands')
 
-		logger.primary('init');
-		logger.muted('\t- Initialize a new project');
+		logger.primary('init')
+		logger.muted('\t- Initialize a new project')
 	}
-});
+})

@@ -1,15 +1,15 @@
 import { existsSync, readFileSync, writeFileSync } from 'fs'
-import { join } from 'path'
+import { join } from 'pathe'
 
-import { logger } from '../../../utils/logger';
-import { SetupAnswers } from '../types/setup-pkgs';
-import { PackageManager } from 'nypm';
+import { logger } from '../../../utils/logger'
+import { SetupAnswers } from '../types/setup-pkgs'
+import { PackageManager } from 'nypm'
 
-export const setupAliasImport = ({pm, answers}: {pm: PackageManager, answers: SetupAnswers}) => {
+export const setupAliasImport = ({ pm, answers }: { pm: PackageManager; answers: SetupAnswers }) => {
 	if (!answers.useAliasImport) {
-		return;
+		return
 	}
-	
+
 	logger.info('Setting up TypeScript alias imports...')
 
 	const tsconfigPath = join(process.cwd(), 'tsconfig.json')

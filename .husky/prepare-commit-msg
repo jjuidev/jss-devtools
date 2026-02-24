@@ -1,2 +1,0 @@
-#!/bin/sh
-# bunx devmoji --edit --lint --config ./.commitlintrc.cjs

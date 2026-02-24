@@ -1,15 +1,11 @@
-import { existsSync, writeFileSync } from 'fs';
-import { join } from 'path';
+import { existsSync, writeFileSync } from 'fs'
+import { join } from 'pathe'
+import { PackageManager } from 'nypm'
 
-import { PackageManager } from 'nypm';
-import { logger } from '../../../utils/logger';
-import { CommitEmoji } from '../types/setup-commitlint';
-import { SetupAnswers } from '../types/setup-pkgs';
-
-import { description, name, version } from './../../../../../package.json';
-
-
-
+import { logger } from '@/cli/utils/logger'
+import { CommitEmoji } from '@/cli/commands/init/types/setup-commitlint'
+import { SetupAnswers } from '@/cli/commands/init/types/setup-pkgs'
+import { name } from './../../../../../package.json'
 
 const createCommitlintConfigRecommend = (commitlintEmoji: CommitEmoji[]) => ({
 	// https://commitlint.js.org/#/reference-configuration
@@ -32,7 +28,7 @@ const createCommitlintConfigRecommend = (commitlintEmoji: CommitEmoji[]) => ({
 		emoji,
 		description
 	}))
-});
+})
 
 const COMMITLINT_EMOJI_RECOMMEND = [
 	{
@@ -167,44 +163,42 @@ const COMMITLINT_EMOJI_RECOMMEND = [
 		emoji: ':crown:',
 		description: 'Maintainer commit and excellent handle for system'
 	}
-];
+]
 
-export const commitlintConfigRecommend = createCommitlintConfigRecommend(COMMITLINT_EMOJI_RECOMMEND);
-export type CommitlintConfig = ReturnType<typeof createCommitlintConfigRecommend>;
+export const commitlintConfigRecommend = createCommitlintConfigRecommend(COMMITLINT_EMOJI_RECOMMEND)
+export type CommitlintConfig = ReturnType<typeof createCommitlintConfigRecommend>
 
 export const defineCommitlintConfig = (configFn?: (emojiList: CommitEmoji[]) => CommitEmoji[]): CommitlintConfig => {
 	if (!configFn) {
-		return commitlintConfigRecommend;
+		return commitlintConfigRecommend
 	}
 
-	const emojiList = configFn(COMMITLINT_EMOJI_RECOMMEND);
+	const emojiList = configFn(COMMITLINT_EMOJI_RECOMMEND)
 
-	return createCommitlintConfigRecommend(emojiList);
-};
+	return createCommitlintConfigRecommend(emojiList)
+}
 
-
-
-export const setupCommitlint = ({pm, answers}: {pm: PackageManager, answers: SetupAnswers}) => {
+export const setupCommitlint = ({ pm, answers }: { pm: PackageManager; answers: SetupAnswers }) => {
 	try {
-		logger.info('Setting up Commitlint...');
+		logger.info('Setting up Commitlint...')
 
-		const commitlintrcPath = join(process.cwd(), '.commitlintrc.cjs');
+		const commitlintrcPath = join(process.cwd(), '.commitlintrc.cjs')
 
 		if (existsSync(commitlintrcPath)) {
-			logger.info('Overwriting existing .commitlintrc.cjs');
+			logger.info('Overwriting existing .commitlintrc.cjs')
 		}
 
 		const commitlintConfigTemplate = `const { commitlintConfigRecommend } = require('${name}');
 
 module.exports = commitlintConfigRecommend;
-`;
+`
 
-		writeFileSync(commitlintrcPath, commitlintConfigTemplate, 'utf8');
-		logger.success(`Created .commitlintrc.cjs`);
+		writeFileSync(commitlintrcPath, commitlintConfigTemplate, 'utf8')
+		logger.success(`Created .commitlintrc.cjs`)
 	} catch (error) {
-		logger.error('Failed to setup commitlint');
+		logger.error('Failed to setup commitlint')
 		if (error instanceof Error) {
-			logger.error(error.message);
+			logger.error(error.message)
 		}
 	}
-};
+}
