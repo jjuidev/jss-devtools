@@ -56,6 +56,7 @@ const buildCJS = async () => {
 	}
 
 	await $`tsc -p tsconfig.cjs.json`
+	await $`tsc-alias -p tsconfig.cjs.json`
 	await writePackageJson('cjs', 'dist/cjs')
 
 	logger.log('CJS done')
@@ -77,6 +78,7 @@ const buildESM = async () => {
 	}
 
 	await $`tsc -p tsconfig.esm.json`
+	await $`tsc-alias -p tsconfig.esm.json`
 	await writePackageJson('esm', 'dist/esm')
 
 	logger.log('ESM done')
@@ -98,6 +100,7 @@ const buildCLI = async () => {
 	}
 
 	await $`tsc -p tsconfig.cli.json`
+	await $`tsc-alias -p tsconfig.cli.json`
 	await writePackageJson('esm', 'dist/cli')
 
 	const finalizeCLI = async () => {
