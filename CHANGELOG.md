@@ -1,5 +1,11 @@
 # @jjuidev/jss-devtools
 
+## 0.1.1
+
+### Patch Changes
+
+- aa54fbb: tsc-alias for build
+
 ## 0.1.0
 
 ### Minor Changes
