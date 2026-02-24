@@ -1,8 +1,8 @@
 import { $ } from 'bun'
 import { cp, readFile, writeFile } from 'fs/promises'
-import { join } from 'path'
+import { join } from 'pathe'
 
-import { logger } from './../src/cli/utils/logger'
+import { logger } from '@/utils/logger'
 
 const writePackageJson = async (type: 'cjs' | 'esm', dir: string) => {
 	const pkgType = JSON.stringify({ type: type === 'esm' ? 'module' : 'commonjs' }, null, 2)
@@ -55,10 +55,9 @@ const buildCJS = async () => {
 		throw new Error('CJS build failed: ' + result.logs.map((l) => l.message).join(', '))
 	}
 
-	await $`tsc -p tsconfig.cjs.json`
 	await writePackageJson('cjs', 'dist/cjs')
 
-	logger.log('CJS done')
+	logger.log('CJS done!')
 }
 
 const buildESM = async () => {
@@ -76,17 +75,16 @@ const buildESM = async () => {
 		throw new Error('ESM build failed: ' + result.logs.map((l) => l.message).join(', '))
 	}
 
-	await $`tsc -p tsconfig.esm.json`
 	await writePackageJson('esm', 'dist/esm')
 
-	logger.log('ESM done')
+	logger.log('ESM done!')
 }
 
 const buildCLI = async () => {
 	logger.log('Building CLI...')
 
 	const result = await Bun.build({
-		entrypoints: ['./src/cli/index.ts'],
+		entrypoints: ['./src/cli.ts'],
 		outdir: './dist/cli',
 		target: 'node',
 		format: 'esm',
@@ -97,13 +95,10 @@ const buildCLI = async () => {
 		throw new Error('CLI build failed: ' + result.logs.map((l) => l.message).join(', '))
 	}
 
-	await $`tsc -p tsconfig.cli.json`
 	await writePackageJson('esm', 'dist/cli')
 
 	const finalizeCLI = async () => {
-		logger.log('Updating shebang...')
-
-		const cliPaths = ['dist/cli/index.js']
+		const cliPaths = ['dist/cli/cli.js']
 		for (const cliPath of cliPaths) {
 			const content = await readFile(cliPath, 'utf-8')
 			if (!content.startsWith('#!/usr/bin/env node')) {
@@ -111,13 +106,20 @@ const buildCLI = async () => {
 			}
 		}
 
-		await Promise.all([$`chmod +x dist/cli/index.js`])
+		await Promise.all([$`chmod +x dist/cli/cli.js`])
 
-		logger.log('CLI done')
+		logger.log('CLI done!')
 	}
 	await finalizeCLI()
+}
 
-	logger.log('CLI done')
+const buildTypes = async () => {
+	logger.log('Building types...')
+
+	await $`tsc -p tsconfig.types.json`
+	await $`tsc-alias -p tsconfig.types.json`
+
+	logger.log('Types done!')
 }
 
 const copyFonts = async () => {
@@ -127,15 +129,11 @@ const copyFonts = async () => {
 	logger.log('Fonts copied')
 }
 
-const cleanBuild = async () => {
-	logger.log('Cleaning dist...')
-	await $`rimraf dist`
-}
-
 const build = async () => {
 	copyFonts()
 
-	await cleanBuild()
+	await $`rimraf dist`
+	await buildTypes()
 	await Promise.all([buildCJS(), buildESM(), buildCLI()])
 	logger.log('Build complete!')
 }

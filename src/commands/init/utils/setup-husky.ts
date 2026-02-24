@@ -3,9 +3,9 @@ import { existsSync, mkdirSync, writeFileSync } from 'fs'
 import { PackageManager } from 'nypm'
 import { join } from 'pathe'
 
-import { SetupAnswers } from '@/cli/commands/init/types/setup-pkgs'
-import { getPMExecCommand } from '@/cli/commands/init/utils/pm'
-import { logger } from '@/cli/utils/logger'
+import { SetupAnswers } from '@/commands/init/types/setup-pkgs'
+import { getPMExecCommand } from '@/commands/init/utils/pm'
+import { logger } from '@/utils/logger'
 
 export const setupHusky = async ({ pm, answers }: { pm: PackageManager; answers: SetupAnswers }) => {
 	try {
