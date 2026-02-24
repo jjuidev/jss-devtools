@@ -1,7 +1,7 @@
 import figlet from 'figlet'
 
-import { CLI_META } from '@/cli/utils/constants'
-import { logger } from '@/cli/utils/logger'
+import { CLI_META } from '@/utils/constants'
+import { logger } from '@/utils/logger'
 
 let cachedBanner: string | null = null
 let bannerDisplayed = false

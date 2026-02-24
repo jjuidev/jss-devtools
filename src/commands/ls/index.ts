@@ -1,7 +1,7 @@
 import { defineCommand } from 'citty'
 
-import { displayBanner } from '@/cli/utils/banner'
-import { logger } from '@/cli/utils/logger'
+import { displayBanner } from '@/utils/banner'
+import { logger } from '@/utils/logger'
 
 export const lsCommand = defineCommand({
 	meta: {

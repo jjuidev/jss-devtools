@@ -1,11 +1,4 @@
-import { existsSync, writeFileSync } from 'fs'
-import { join } from 'pathe'
-import { PackageManager } from 'nypm'
-
-import { logger } from '@/cli/utils/logger'
-import { CommitEmoji } from '@/cli/commands/init/types/setup-commitlint'
-import { SetupAnswers } from '@/cli/commands/init/types/setup-pkgs'
-import { name } from './../../../../../package.json'
+import { CommitEmoji } from '@/commands/init/types/setup-commitlint'
 
 const createCommitlintConfigRecommend = (commitlintEmoji: CommitEmoji[]) => ({
 	// https://commitlint.js.org/#/reference-configuration
@@ -176,29 +169,4 @@ export const defineCommitlintConfig = (configFn?: (emojiList: CommitEmoji[]) => 
 	const emojiList = configFn(COMMITLINT_EMOJI_RECOMMEND)
 
 	return createCommitlintConfigRecommend(emojiList)
-}
-
-export const setupCommitlint = ({ pm, answers }: { pm: PackageManager; answers: SetupAnswers }) => {
-	try {
-		logger.info('Setting up Commitlint...')
-
-		const commitlintrcPath = join(process.cwd(), '.commitlintrc.cjs')
-
-		if (existsSync(commitlintrcPath)) {
-			logger.info('Overwriting existing .commitlintrc.cjs')
-		}
-
-		const commitlintConfigTemplate = `const { commitlintConfigRecommend } = require('${name}');
-
-module.exports = commitlintConfigRecommend;
-`
-
-		writeFileSync(commitlintrcPath, commitlintConfigTemplate, 'utf8')
-		logger.success(`Created .commitlintrc.cjs`)
-	} catch (error) {
-		logger.error('Failed to setup commitlint')
-		if (error instanceof Error) {
-			logger.error(error.message)
-		}
-	}
 }

@@ -1,2 +1,2 @@
-export * from '@/cli/commands/init/utils/eslint'
-export * from '@/cli/commands/init/utils/setup-commitlint'
+export * from '@/commands/init/utils/config-commitlint'
+export * from '@/commands/init/utils/config-formatter'

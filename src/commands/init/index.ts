@@ -2,14 +2,14 @@ import { confirm, group, select } from '@clack/prompts'
 import { defineCommand } from 'citty'
 import { detectPackageManager } from 'nypm'
 
-import { Framework, SetupAnswers } from '@/cli/commands/init/types/setup-pkgs'
-import { setupAliasImport } from '@/cli/commands/init/utils/setup-alias-import'
-import { setupCommitlint } from '@/cli/commands/init/utils/setup-commitlint'
-import { setupFormatter } from '@/cli/commands/init/utils/setup-formatter'
-import { setupHusky } from '@/cli/commands/init/utils/setup-husky'
-import { setupPackages } from '@/cli/commands/init/utils/setup-pkgs'
-import { displayBanner } from '@/cli/utils/banner'
-import { logger } from '@/cli/utils/logger'
+import { Framework, SetupAnswers } from '@/commands/init/types/setup-pkgs'
+import { setupAliasImport } from '@/commands/init/utils/setup-alias-import'
+import { setupCommitlint } from '@/commands/init/utils/setup-commitlint'
+import { setupFormatter } from '@/commands/init/utils/setup-formatter'
+import { setupHusky } from '@/commands/init/utils/setup-husky'
+import { setupPackages } from '@/commands/init/utils/setup-pkgs'
+import { displayBanner } from '@/utils/banner'
+import { logger } from '@/utils/logger'
 
 export const initCommand = defineCommand({
 	meta: {
