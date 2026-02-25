@@ -21,7 +21,7 @@ npx @jjuidev/jss-devtools init
 
 ### `init` Command
 
-Interactive setup that configures your project with:
+Setup that configures your project with:
 
 - **Framework selection**: Node.js, React, React Native, Next.js
 - **Tailwind CSS** support (conditional)
@@ -31,17 +31,50 @@ Interactive setup that configures your project with:
 - **Commitlint** with emoji-based commit types
 - **ESLint + Prettier** configuration
 
+#### Interactive Mode
+
 ```bash
-# bin CLI
-jss --help
-# or
-npx @jjuidev/jss-devtools
-# or
-yarn dlx @jjuidev/jss-devtools
-# or
-pnpm exec @jjuidev/jss-devtools
-# or
-bunx @jjuidev/jss-devtools
+# Interactive prompts (default)
+jss-devtools init
+
+# or using npx/yarn/pnpm/bunx
+npx @jjuidev/jss-devtools init
+```
+
+#### Non-Interactive Mode
+
+For CI/CD pipelines and automation scripts:
+
+```bash
+# Use default configuration
+jss-devtools init -y
+
+# Specify framework
+jss-devtools init --framework react
+
+# Full control with all flags
+jss-devtools init --framework nextjs --tailwind --storybook --aliasImport
+```
+
+**Available Flags:**
+
+| Flag            | Alias | Type    | Description                                                 |
+| --------------- | ----- | ------- | ----------------------------------------------------------- |
+| `--yes`         | `-y`  | boolean | Use default configuration                                   |
+| `--framework`   |       | string  | Target framework: `node`, `react`, `react-native`, `nextjs` |
+| `--tailwind`    |       | boolean | Enable Tailwind CSS                                         |
+| `--storybook`   |       | boolean | Enable Storybook                                            |
+| `--aliasImport` |       | boolean | Enable alias imports (`@/*`)                                |
+
+**Default Configuration (when using `-y`):**
+
+```json
+{
+	"framework": "node",
+	"tailwind": true,
+	"storybook": false,
+	"aliasImport": true
+}
 ```
 
 ## Library Exports
