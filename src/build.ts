@@ -1,13 +1,13 @@
-import { $ } from 'bun'
-import { cp, readFile, writeFile } from 'fs/promises'
-import { join } from 'pathe'
+import { $ } from 'bun';
+import { cp, readFile, writeFile } from 'fs/promises';
+import { join } from 'pathe';
 
-import { logger } from '@/utils/logger'
+import { logger } from '@/utils/logger';
 
 const writePackageJson = async (type: 'cjs' | 'esm', dir: string) => {
-	const pkgType = JSON.stringify({ type: type === 'esm' ? 'module' : 'commonjs' }, null, 2)
-	await writeFile(join(dir, 'package.json'), pkgType)
-}
+	const pkgType = JSON.stringify({ type: type === 'esm' ? 'module' : 'commonjs' }, null, 2);
+	await writeFile(join(dir, 'package.json'), pkgType);
+};
 
 const EXTERNAL_DEPS = [
 	'consola',
@@ -37,10 +37,10 @@ const EXTERNAL_DEPS = [
 	'eslint-plugin-storybook',
 
 	'@next/eslint-plugin-next'
-]
+];
 
 const buildCJS = async () => {
-	logger.log('Building CJS...')
+	logger.log('Building CJS...');
 
 	const result = await Bun.build({
 		entrypoints: ['./src/index.ts'],
@@ -49,21 +49,19 @@ const buildCJS = async () => {
 		format: 'cjs',
 		naming: '[name].cjs',
 		external: EXTERNAL_DEPS
-	})
+	});
 
 	if (!result.success) {
-		throw new Error('CJS build failed: ' + result.logs.map((l) => l.message).join(', '))
+		throw new Error('CJS build failed: ' + result.logs.map((l) => l.message).join(', '));
 	}
 
-	await $`tsc -p tsconfig.cjs.json`
-	await $`tsc-alias -p tsconfig.cjs.json`
-	await writePackageJson('cjs', 'dist/cjs')
+	await writePackageJson('cjs', 'dist/cjs');
 
-	logger.log('CJS done!')
-}
+	logger.log('CJS done!');
+};
 
 const buildESM = async () => {
-	logger.log('Building ESM...')
+	logger.log('Building ESM...');
 
 	const result = await Bun.build({
 		entrypoints: ['./src/index.ts'],
@@ -71,21 +69,19 @@ const buildESM = async () => {
 		target: 'node',
 		format: 'esm',
 		external: EXTERNAL_DEPS
-	})
+	});
 
 	if (!result.success) {
-		throw new Error('ESM build failed: ' + result.logs.map((l) => l.message).join(', '))
+		throw new Error('ESM build failed: ' + result.logs.map((l) => l.message).join(', '));
 	}
 
-	await $`tsc -p tsconfig.esm.json`
-	await $`tsc-alias -p tsconfig.esm.json`
-	await writePackageJson('esm', 'dist/esm')
+	await writePackageJson('esm', 'dist/esm');
 
-	logger.log('ESM done!')
-}
+	logger.log('ESM done!');
+};
 
 const buildCLI = async () => {
-	logger.log('Building CLI...')
+	logger.log('Building CLI...');
 
 	const result = await Bun.build({
 		entrypoints: ['./src/cli.ts'],
@@ -93,45 +89,58 @@ const buildCLI = async () => {
 		target: 'node',
 		format: 'esm',
 		external: EXTERNAL_DEPS
-	})
+	});
 
 	if (!result.success) {
-		throw new Error('CLI build failed: ' + result.logs.map((l) => l.message).join(', '))
+		throw new Error('CLI build failed: ' + result.logs.map((l) => l.message).join(', '));
 	}
 
-	await $`tsc -p tsconfig.cli.json`
-	await $`tsc-alias -p tsconfig.cli.json`
-	await writePackageJson('esm', 'dist/cli')
+	await writePackageJson('esm', 'dist/cli');
 
 	const finalizeCLI = async () => {
-		const cliPaths = ['dist/cli/cli.js']
+		const cliPaths = ['dist/cli/cli.js'];
 		for (const cliPath of cliPaths) {
-			const content = await readFile(cliPath, 'utf-8')
+			const content = await readFile(cliPath, 'utf-8');
 			if (!content.startsWith('#!/usr/bin/env node')) {
-				await writeFile(cliPath, '#!/usr/bin/env node\n' + content)
+				await writeFile(cliPath, '#!/usr/bin/env node\n' + content);
 			}
 		}
 
-		await Promise.all([$`chmod +x dist/cli/cli.js`])
+		await Promise.all([$`chmod +x dist/cli/cli.js`]);
 
-		logger.log('CLI done!')
-	}
-	await finalizeCLI()
-}
+		logger.log('CLI done!');
+	};
+	await finalizeCLI();
+};
+
+const buildTypes = async () => {
+	logger.log('Building types...');
+
+	await $`tsc -p tsconfig.types.json`;
+	await $`tsc-alias -p tsconfig.types.json`;
+
+	logger.log('Types done!');
+};
 
 const copyFonts = async () => {
-	logger.log('Copying figlet fonts...')
-	const fontsSrc = join('node_modules', 'figlet', 'fonts')
-	await cp(fontsSrc, 'dist/fonts', { recursive: true })
-	logger.log('Fonts copied')
-}
+	logger.log('Copying figlet fonts...');
+	const fontsSrc = join('node_modules', 'figlet', 'fonts');
+	await cp(fontsSrc, 'dist/fonts', { recursive: true });
+	logger.log('Fonts copied');
+};
+
+const cleanBuild = async () => {
+	logger.log('Cleaning...');
+	await $`rimraf dist`;
+	logger.log('Cleaned');
+};
 
 const build = async () => {
-	copyFonts()
+	await cleanBuild();
+	await buildTypes();
+	await Promise.all([buildCJS(), buildESM(), buildCLI()]);
+	copyFonts();
+	logger.log('Build complete!');
+};
 
-	await $`rimraf dist`
-	await Promise.all([buildCJS(), buildESM(), buildCLI()])
-	logger.log('Build complete!')
-}
-
-build().catch(logger.error)
+build().catch(logger.error);

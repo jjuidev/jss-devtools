@@ -1,14 +1,14 @@
-import figlet from 'figlet'
+import figlet from 'figlet';
 
-import { CLI_META } from '@/utils/constants'
-import { logger } from '@/utils/logger'
+import { CLI_META } from '@/utils/constants';
+import { logger } from '@/utils/logger';
 
-let cachedBanner: string | null = null
-let bannerDisplayed = false
+let cachedBanner: string | null = null;
+let bannerDisplayed = false;
 
 export const getBanner = (): string => {
 	if (cachedBanner) {
-		return cachedBanner
+		return cachedBanner;
 	}
 
 	try {
@@ -16,23 +16,24 @@ export const getBanner = (): string => {
 			font: 'Standard',
 			horizontalLayout: 'default',
 			verticalLayout: 'default'
-		})
+		});
 	} catch {
-		cachedBanner = CLI_META.name
+		cachedBanner = CLI_META.name;
 	}
 
-	return cachedBanner
-}
+	return cachedBanner;
+};
 
 export const displayBanner = (): void => {
 	if (bannerDisplayed) {
-		return
+		return;
 	}
 
-	bannerDisplayed = true
+	bannerDisplayed = true;
 
-	const banner = getBanner()
+	const banner = getBanner();
 
-	logger.primary(banner)
-	logger.muted(CLI_META.tagline)
-}
+	// Use raw output to preserve ASCII art (consola breaks multiline chars)
+	logger.banner(banner);
+	logger.tagline(CLI_META.tagline);
+};
