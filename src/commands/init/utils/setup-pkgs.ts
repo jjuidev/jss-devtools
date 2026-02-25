@@ -1,9 +1,21 @@
 import { addDependency, addDevDependency, installDependencies, PackageManager } from 'nypm';
 
-import { PackageToInstall, SetupAnswers } from '../types/setup-pkgs';
+import { PackageToInstall, SetupAnswers } from '@/commands/init/types/setup-pkgs';
+import { peerDependencies } from '../../../../package.json';
 
-export const setupPackages = async ({pm, answers}: {pm: PackageManager, answers: SetupAnswers}) => {
+const buildPkgString = (pkgName: string): string => {
+	const version = peerDependencies[pkgName as keyof typeof peerDependencies];
+	return version ? `${pkgName}@${version}` : pkgName;
+};
 
+const flattenPackages = (pkgs: PackageToInstall[]): string[] => {
+	return pkgs.flatMap((pkg) => {
+		const names = Array.isArray(pkg.name) ? pkg.name : [pkg.name];
+		return names.map(buildPkgString);
+	});
+};
+
+export const setupPackages = async ({ pm, answers }: { pm: PackageManager; answers: SetupAnswers }) => {
 	const commonDependencies: PackageToInstall[] = [
 		{
 			name: 'typescript',
@@ -109,8 +121,9 @@ export const setupPackages = async ({pm, answers}: {pm: PackageManager, answers:
 	const devDependencies = allDependencies.filter((dep) => dep.dev);
 	const dependencies = allDependencies.filter((dep) => !dep.dev);
 
-	const devDependencyNames = devDependencies.map((dep) => dep.name).flat();
-	const dependencyNames = dependencies.map((dep) => dep.name).flat();
+	// Use versions from peerDependencies
+	const devDependencyNames = flattenPackages(devDependencies);
+	const dependencyNames = flattenPackages(dependencies);
 
 	addDependency(dependencyNames);
 	addDevDependency(devDependencyNames);

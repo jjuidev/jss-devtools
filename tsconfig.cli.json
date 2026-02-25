@@ -3,8 +3,6 @@
 	"compilerOptions": {
 		"module": "ESNext",
 		"outDir": "./dist/cli",
-		"emitDeclarationOnly": true,
-		"declaration": true,
-		"declarationMap": true
+		"noEmit": true
 	}
 }

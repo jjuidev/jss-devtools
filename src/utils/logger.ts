@@ -15,5 +15,10 @@ export const logger = {
 
 	box: (message: string) => consola.box(message),
 	start: (message: string) => consola.start(message),
-	ready: (message: string) => consola.ready(message)
+	ready: (message: string) => consola.ready(message),
+
+	// Raw output - bypass consola for ASCII art (consola breaks multiline chars)
+	raw: (message: string) => console.log(message),
+	banner: (message: string) => console.log(colors.cyan(message)),
+	tagline: (message: string) => console.log(colors.gray(message))
 }

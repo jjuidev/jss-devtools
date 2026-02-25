@@ -1,25 +1,21 @@
 {
 	"name": "@jjuidev/jss-devtools",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Development tools CLI for Javascript stack like React, RN, NextJS, Nest, etc.",
 	"license": "MIT",
 	"type": "module",
 	"exports": {
 		".": {
-			"import": {
-				"types": "./dist/esm/index.d.ts",
-				"default": "./dist/esm/index.js"
-			},
-			"require": {
-				"types": "./dist/cjs/index.d.ts",
-				"default": "./dist/cjs/index.cjs"
-			}
+			"types": "./dist/types/index.d.ts",
+			"import": "./dist/esm/index.js",
+			"require": "./dist/cjs/index.cjs"
 		}
 	},
 	"main": "./dist/cjs/index.cjs",
 	"module": "./dist/esm/index.js",
+	"types": "./dist/types/index.d.ts",
 	"bin": {
-		"jss-devtools": "./dist/cli/index.js"
+		"jss-devtools": "./dist/cli/cli.js"
 	},
 	"files": [
 		"dist"
@@ -33,7 +29,6 @@
 		"release": "bun run clean && bun run build && changeset publish",
 		"version": "changeset version"
 	},
-	"types": "./dist/esm/index.d.ts",
 	"dependencies": {
 		"@clack/prompts": "^1.0.1",
 		"citty": "^0.2.1",
