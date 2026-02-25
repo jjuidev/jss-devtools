@@ -1,5 +1,11 @@
 # @jjuidev/jss-devtools
 
+## 0.3.0
+
+### Minor Changes
+
+- Add init command for CLI
+
 ## 0.2.0
 
 ### Minor Changes
