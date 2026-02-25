@@ -1,5 +1,15 @@
 # @jjuidev/jss-devtools
 
+## 0.2.0
+
+### Minor Changes
+
+- Add init command for CLI
+
+### Patch Changes
+
+- f6d4c6f: tsc-alias for build
+
 ## 0.1.0
 
 ### Minor Changes
