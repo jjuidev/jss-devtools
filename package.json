@@ -1,6 +1,6 @@
 {
 	"name": "@jjuidev/jss-devtools",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"description": "Development tools CLI for Javascript stack like React, RN, NextJS, Nest, etc.",
 	"license": "MIT",
 	"type": "module",
