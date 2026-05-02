@@ -1,43 +1,43 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import pluginJs from '@eslint/js'
-import { defineConfig } from 'eslint/config'
-import plugAutofix from 'eslint-plugin-autofix'
-import pluginImport from 'eslint-plugin-import'
-import pluginPreferArrowFunctions from 'eslint-plugin-prefer-arrow-functions'
-import globals from 'globals'
-import tseslint from 'typescript-eslint'
+import pluginJs from '@eslint/js';
+import { defineConfig } from 'eslint/config';
+import plugAutofix from 'eslint-plugin-autofix';
+import pluginImport from 'eslint-plugin-import';
+import pluginPreferArrowFunctions from 'eslint-plugin-prefer-arrow-functions';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 const loadModule = async (name: string) => {
 	try {
-		const module = await import(name)
+		const module = await import(name);
 
-		return module.default || module
+		return module.default || module;
 	} catch (err) {
-		console.error(`❌ Failed to load module: ${name}`)
-		console.error(`   Please install it: npm install --save-dev ${name}`)
-		throw err
+		console.error(`❌ Failed to load module: ${name}`);
+		console.error(`   Please install it: npm install --save-dev ${name}`);
+		throw err;
 	}
-}
+};
 
 export const defineEslintConfig = async (...configs: any[]) => {
 	const resolvedConfigs = await Promise.all(
 		configs.map(async (config) => {
 			if (config instanceof Promise) {
-				return await config
+				return await config;
 			}
 
 			if (Array.isArray(config)) {
-				return config
+				return config;
 			}
 
-			return config
+			return config;
 		})
-	)
+	);
 
-	return defineConfig(...resolvedConfigs.flat())
-}
+	return defineConfig(...resolvedConfigs.flat());
+};
 
 export const eslintConfigNode = defineEslintConfig(
 	{
@@ -79,7 +79,17 @@ export const eslintConfigNode = defineEslintConfig(
 			],
 
 			// @typescript-eslint
-			'@typescript-eslint/no-unused-vars': 'warn',
+			'@typescript-eslint/no-unused-vars': [
+				'warn',
+				{
+					args: 'all',
+					argsIgnorePattern: '^_',
+					varsIgnorePattern: '^_',
+					caughtErrorsIgnorePattern: '^_',
+					destructuredArrayIgnorePattern: '^_',
+					ignoreRestSiblings: true
+				}
+			],
 			'@typescript-eslint/no-explicit-any': 'off',
 			'@typescript-eslint/no-empty-object-type': 'off',
 			'@typescript-eslint/consistent-type-imports': ['error', { prefer: 'no-type-imports' }],
@@ -142,7 +152,7 @@ export const eslintConfigNode = defineEslintConfig(
 			]
 		}
 	}
-)
+);
 
 export const pluginReact = () =>
 	(async () => {
@@ -150,7 +160,7 @@ export const pluginReact = () =>
 			loadModule('eslint-plugin-react'),
 			loadModule('eslint-plugin-react-hooks'),
 			loadModule('eslint-plugin-react-native')
-		])
+		]);
 
 		return defineEslintConfig({
 			settings: {
@@ -185,12 +195,12 @@ export const pluginReact = () =>
 				'react-hooks/rules-of-hooks': 'error',
 				'react-hooks/exhaustive-deps': 'warn'
 			}
-		})
-	})()
+		});
+	})();
 
 export const pluginNext = () =>
 	(async () => {
-		const pluginNext = await loadModule('@next/eslint-plugin-next')
+		const pluginNext = await loadModule('@next/eslint-plugin-next');
 
 		return defineEslintConfig(pluginReact(), {
 			plugins: {
@@ -202,12 +212,12 @@ export const pluginNext = () =>
 				...pluginNext.configs.recommended.rules,
 				...pluginNext.configs['core-web-vitals'].rules
 			}
-		})
-	})()
+		});
+	})();
 
 export const pluginStorybook = () =>
 	(async () => {
-		const pluginStorybook = await loadModule('eslint-plugin-storybook')
+		const pluginStorybook = await loadModule('eslint-plugin-storybook');
 
 		return [
 			{
@@ -220,7 +230,7 @@ export const pluginStorybook = () =>
 					...pluginStorybook.configs.recommended.rules
 				}
 			}
-		]
-	})()
+		];
+	})();
 
-export default eslintConfigNode
+export default eslintConfigNode;
