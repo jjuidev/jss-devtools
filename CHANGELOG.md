@@ -1,5 +1,11 @@
 # @jjuidev/jss-devtools
 
+## 0.3.2
+
+### Patch Changes
+
+- b591b21: Add eslint rules
+
 ## 0.3.1
 
 ### Patch Changes
