@@ -1,5 +1,11 @@
 # @jjuidev/jss-devtools
 
+## 0.3.1
+
+### Patch Changes
+
+- Supported non-interactive CLI
+
 ## 0.3.0
 
 ### Minor Changes
