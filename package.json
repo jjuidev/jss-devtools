@@ -20,6 +20,9 @@
 	"files": [
 		"dist"
 	],
+	"publishConfig": {
+		"access": "public"
+	},
 	"scripts": {
 		"build": "bun run src/build.ts",
 		"changeset": "changeset",
